@@ -1,35 +1,49 @@
+variable "default_subnets" {
+  description = "Mapping of AZ keys to public/private subnets"
+  type = map(object({
+    default_private_subnet_cidr = string
+    default_public_subnet_cidr  = string
+  }))
+}
+
 variable "enable_dns_hostnames" {
-  description = "Enable DNS hostnames"
-  type        = bool
+  description = "Enable or Disable DNS Hostnames"
   default     = true
+  type        = bool
 }
 
 variable "enable_dns_support" {
-  description = "Enable DNS hostnames"
-  type        = bool
+  description = "Enable or Disable DNS Support"
   default     = true
+  type        = bool
 }
 
 variable "enable_flow_logs" {
-  description = "Enable VPC flow logs"
+  description = "Enable or Disable VPC Flow Logs (CloudWatch)"
+  default     = false
   type        = bool
-  default     = true
 }
 
-variable "env" {
-  description = "Environment name (dev, staging, prod)"
+variable "environment" {
+  description = "Target Environment - sandbox is generic, but could be dev, staging, integration, production etc"
+  default     = "sandbox"
   type        = string
-  default     = "dev"
 }
 
-variable "name" {
-  description = "Resource name"
+variable "map_public_ip_on_launch" {
+  description = "Map a public IP on launch"
+  default     = "false"
   type        = string
-  default     = "NOT_SET"
 }
 
 variable "vpc_cidr_block" {
-  default = "10.0.0.0/16"
-  description = "Default CIDR block for VPC"
+  description = "Default VPC CIDR Block"
+  default     = "10.11.0.0/16"
+  type        = string
+}
+
+variable "vpc_name" {
+  description = "Our VPC Tag Name"
+  default     = "sandbox"
   type        = string
 }

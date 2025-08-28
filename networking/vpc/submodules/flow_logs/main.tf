@@ -50,8 +50,8 @@ resource "aws_iam_role_policy" "vpc-flow-logs-iam-role-policy" {
 }
 
 variable "cfg" {
-  type   = object({
-  vpc_id = string
-  name   = string
+  type = object({
+    vpc_id = string
+    name   = string
   })
 }

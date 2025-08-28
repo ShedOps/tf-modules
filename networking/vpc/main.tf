@@ -1,14 +1,13 @@
-data "aws_region" "current" {}
+resource "aws_vpc" "vpc" {
+  cidr_block = var.vpc_cidr_block
 
-resource "aws_vpc" "sandbox" {
-  cidr_block           = var.vpc_cidr_block
-  enable_dns_hostnames = var.enable_dns_hostnames
-  enable_dns_support   = var.enable_dns_support
   instance_tenancy     = "default"
+  enable_dns_support   = var.enable_dns_support
+  enable_dns_hostnames = var.enable_dns_hostnames
 
   tags = {
-    Name               = var.name
-    Created_by         = "Terraform"
-    Environment        = var.env
+    Name        = "${var.vpc_name}-vpc"
+    Environment = var.environment
+    Provided_By = "terraform"
   }
 }
