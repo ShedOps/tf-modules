@@ -1,3 +1,3 @@
 # tf-modules
 
-Handy terraform modules
+This is a example monorepo for terraform modules and how it can be used.
