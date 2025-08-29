@@ -16,7 +16,7 @@ To create the VPC:
 
 Some points:
 
-a) We use local backend for S3 state, as its an example :) in prod environments
+a) We use local backend for terraform state, as its an example :) in prod environments
 we would use S3 and dynamodb
 
 b) This will create a VPC with flow logs disabled
