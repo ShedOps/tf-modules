@@ -10,20 +10,20 @@ output "vpc_id" {
 # s.id gives us the actual subnet_id, relevant to the key
 output "default_private_subnet_ids" {
   description = "Map of private subnet IDs by AZ key"
-  value       = { for k, s in aws_subnet.default-private : k => s.id }
+  value       = { for k, s in aws_subnet.default_private : k => s.id }
 }
 
 output "default_public_subnet_ids" {
   description = "Map of public subnet IDs by AZ key"
-  value       = { for k, s in aws_subnet.default-public : k => s.id }
+  value       = { for k, s in aws_subnet.default_public : k => s.id }
 }
 
-output "default-public-nacl" {
+output "default_public_nacl_id" {
   description = "Default Public Subnet NACL"
-  value       = aws_network_acl.default-public-nacl.id
+  value       = aws_network_acl.default_public_nacl.id
 }
 
-output "default-private-nacl" {
+output "default_private_nacl_id" {
   description = "Default Private Subnet NACL"
-  value       = aws_network_acl.default-private-nacl.id
+  value       = aws_network_acl.default_private_nacl.id
 }

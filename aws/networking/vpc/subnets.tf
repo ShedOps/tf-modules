@@ -1,5 +1,5 @@
 #--- DEFAULT PUBLIC SUBNET
-resource "aws_subnet" "default-public" {
+resource "aws_subnet" "default_public" {
   vpc_id   = aws_vpc.vpc.id
   for_each = var.default_subnets
 
@@ -14,24 +14,24 @@ resource "aws_subnet" "default-public" {
   }
 }
 
-resource "aws_network_acl" "default-public-nacl" {
+resource "aws_network_acl" "default_public_nacl" {
   vpc_id = aws_vpc.vpc.id
   tags = {
     Name = "${var.vpc_name}-default-public-nacl"
   }
 }
 
-resource "aws_network_acl_association" "default-public-nacl-assoc" {
-  for_each       = aws_subnet.default-public
+resource "aws_network_acl_association" "default_public_nacl_assoc" {
+  for_each       = aws_subnet.default_public
   subnet_id      = each.value.id
-  network_acl_id = aws_network_acl.default-public-nacl.id
+  network_acl_id = aws_network_acl.default_public_nacl.id
 }
 
 resource "aws_default_route_table" "public" {
   default_route_table_id = aws_vpc.vpc.default_route_table_id
 
   tags = {
-    Name        = "${var.vpc_name}-default-public-routetable"
+    Name        = "${var.vpc_name}-default_public_routetable"
     Environment = var.environment
     Provided_By = "terraform"
   }
@@ -47,19 +47,19 @@ resource "aws_route" "public_route" {
 resource "aws_route_table_association" "public_rta" {
   for_each = var.default_subnets
 
-  subnet_id      = aws_subnet.default-public[each.key].id
+  subnet_id      = aws_subnet.default_public[each.key].id
   route_table_id = aws_default_route_table.public.id
 }
 
 
 #--- DEFAULT PRIVATE SUBNET
-resource "aws_subnet" "default-private" {
+resource "aws_subnet" "default_private" {
   vpc_id   = aws_vpc.vpc.id
   for_each = var.default_subnets
 
   cidr_block              = each.value.default_private_subnet_cidr
   availability_zone       = data.aws_availability_zones.available.names[index(keys(var.default_subnets), each.key)]
-  map_public_ip_on_launch = "false"
+  map_public_ip_on_launch = false
 
   tags = {
     Name        = "${var.vpc_name}-private-${each.key}"
@@ -68,17 +68,17 @@ resource "aws_subnet" "default-private" {
   }
 }
 
-resource "aws_network_acl" "default-private-nacl" {
+resource "aws_network_acl" "default_private_nacl" {
   vpc_id = aws_vpc.vpc.id
   tags = {
     Name = "${var.vpc_name}-default-private-nacl"
   }
 }
 
-resource "aws_network_acl_association" "default-private-nacl-assoc" {
-  for_each       = aws_subnet.default-private
+resource "aws_network_acl_association" "default_private_nacl_assoc" {
+  for_each       = aws_subnet.default_private
   subnet_id      = each.value.id
-  network_acl_id = aws_network_acl.default-private-nacl.id
+  network_acl_id = aws_network_acl.default_private_nacl.id
 }
 
 resource "aws_route_table" "private" {
@@ -105,6 +105,6 @@ resource "aws_route" "private_route" {
 resource "aws_route_table_association" "private_rta" {
   for_each = var.default_subnets
 
-  subnet_id      = aws_subnet.default-private[each.key].id
+  subnet_id      = aws_subnet.default_private[each.key].id
   route_table_id = aws_route_table.private[each.key].id
 }

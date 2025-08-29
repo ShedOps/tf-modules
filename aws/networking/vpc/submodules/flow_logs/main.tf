@@ -1,11 +1,11 @@
-resource "aws_flow_log" "vpc-flow-log" {
-  iam_role_arn    = aws_iam_role.vpc-flow-logs-iam-role.arn
-  log_destination = aws_cloudwatch_log_group.vpc-flow-logs-cwlg.arn
+resource "aws_flow_log" "vpc_flow_log" {
+  iam_role_arn    = aws_iam_role.vpc_flow_logs_iam_role.arn
+  log_destination = aws_cloudwatch_log_group.vpc_flow_logs_cwlg.arn
   traffic_type    = "ALL"
   vpc_id          = var.cfg.vpc_id
 }
 
-resource "aws_cloudwatch_log_group" "vpc-flow-logs-cwlg" {
+resource "aws_cloudwatch_log_group" "vpc_flow_logs_cwlg" {
   name = var.cfg.name
 }
 
@@ -15,19 +15,19 @@ data "aws_iam_policy_document" "assume_role" {
 
     principals {
       type        = "Service"
-      identifiers = ["vpc-flow-logs.amazonaws.com"]
+      identifiers = ["vpc_flow_logs.amazonaws.com"]
     }
 
     actions = ["sts:AssumeRole"]
   }
 }
 
-resource "aws_iam_role" "vpc-flow-logs-iam-role" {
+resource "aws_iam_role" "vpc_flow_logs_iam_role" {
   name               = var.cfg.name
   assume_role_policy = data.aws_iam_policy_document.assume_role.json
 }
 
-data "aws_iam_policy_document" "vpc-flow-logs-iam-policy-doc" {
+data "aws_iam_policy_document" "vpc_flow_logs_iam_policy_doc" {
   statement {
     effect = "Allow"
 
@@ -43,10 +43,10 @@ data "aws_iam_policy_document" "vpc-flow-logs-iam-policy-doc" {
   }
 }
 
-resource "aws_iam_role_policy" "vpc-flow-logs-iam-role-policy" {
+resource "aws_iam_role_policy" "vpc_flow_logs_iam_role_policy" {
   name   = var.cfg.name
-  role   = aws_iam_role.vpc-flow-logs-iam-role.id
-  policy = data.aws_iam_policy_document.vpc-flow-logs-iam-policy-doc.json
+  role   = aws_iam_role.vpc_flow_logs_iam_role.id
+  policy = data.aws_iam_policy_document.vpc_flow_logs_iam_policy_doc.json
 }
 
 variable "cfg" {

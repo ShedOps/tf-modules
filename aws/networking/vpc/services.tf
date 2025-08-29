@@ -20,7 +20,7 @@ resource "aws_eip" "nat" {
 resource "aws_nat_gateway" "natgw" {
   for_each      = var.default_subnets
   allocation_id = aws_eip.nat[each.key].id
-  subnet_id     = aws_subnet.default-public[each.key].id
+  subnet_id     = aws_subnet.default_public[each.key].id
 
   tags = {
     Name        = "${var.vpc_name}-natgw-${each.key}"

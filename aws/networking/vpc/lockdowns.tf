@@ -1,6 +1,6 @@
 # Locks down default resources for tight control - this is useful to prevent accidental exposure
 # if soneone forgets an association (we land in a deny-by-default posture).
-resource "aws_default_security_group" "locked-default-sg" {
+resource "aws_default_security_group" "locked_default_sg" {
   vpc_id = aws_vpc.vpc.id
 
   # We deny ALL traffic by omitting any ingress/egress rules
@@ -14,7 +14,7 @@ resource "aws_default_security_group" "locked-default-sg" {
 
 # We leave the default NACL unassociated with any subnets
 # ...and add deny-all
-resource "aws_default_network_acl" "locked-default-nacl" {
+resource "aws_default_network_acl" "locked_default_nacl" {
   default_network_acl_id = aws_vpc.vpc.default_network_acl_id
   subnet_ids             = []
 
