@@ -1,0 +1,15 @@
+# Copy to terraform.tfvars and customise
+default_subnets = {
+  "az-a" = {
+    default_private_subnet_cidr = "10.11.1.0/24"
+    default_public_subnet_cidr  = "10.11.10.0/28"
+  }
+  "az-b" = {
+    default_private_subnet_cidr = "10.11.2.0/24"
+    default_public_subnet_cidr  = "10.11.10.16/28"
+  }
+  "az-c" = {
+    default_private_subnet_cidr = "10.11.3.0/24"
+    default_public_subnet_cidr  = "10.11.10.32/28"
+  }
+}
