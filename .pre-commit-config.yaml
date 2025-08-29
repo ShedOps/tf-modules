@@ -30,15 +30,16 @@ repos:
               }
 
   # --- Terraform bundle ---
+  # We will keep the capture group for future additions
   - repo: https://github.com/antonbabenko/pre-commit-terraform
     rev: v1.100.0
     hooks:
       - id: terraform_fmt
-        files: ^(terraform/|modules/|.+\.tf$)
+        files: ^(aws)/.*\.(tf|tfvars|\.json)$
       - id: terraform_validate
-        files: ^(terraform/|modules/|.+\.tf$)
+        files: ^(aws)/.*\.(tf|tfvars|\.json)$
       - id: terraform_tflint
-        files: ^(terraform/|modules/|.+\.tf$)
+        files: ^(aws)/.*\.(tf|tfvars|\.json)$
       # Docs generation for modules:
       - id: terraform_docs
         pass_filenames: false
