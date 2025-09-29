@@ -1,12 +1,6 @@
-# Example barebones VPC, subnets, routing, IGW/NATGWs and NACLs for a web tier application
+# Example barebones VPC, subnets, routing, IGW/NATGWs and NACLs
 
-Web Tier exists in the public subnets and routing is allowed ingress from
-the internet on TCP/80 / TCP/443 with egress
-
-Private subnets are alllowed to talk within the VPC, but not outside
- of this context
-
-##
+## Traffic allowed freely
 
 To create the VPC:
 
@@ -19,9 +13,11 @@ Some points:
 a) We use local backend for S3 state, as its an example :) in prod environments
 we would use S3 and dynamodb
 
-b) This will create a VPC with flow logs disabled
+b) This will create 2 x subnets: Private and Public
 
-c) This is locked down, tweak as you like for internet outbound access,
+c) This will create a VPC with flow logs disabled
+
+d) This is NOT locked down by default, tweak as you like for internet outbound access,
 patching / updates etc
 
 To destroy the VPC:
