@@ -1,4 +1,4 @@
-# Example basic EKS cluster with varying available permissions
+# Example basic EKS cluster (using IAM User and Role Authentication for EKS) with varying available permissions
 
 ## EKS Auditor example
 
