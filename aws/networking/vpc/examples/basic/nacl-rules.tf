@@ -1,58 +1,99 @@
-# Public subnets: typical web-tier (can receive 80/443 traffic from the internet)
-# As NACLs are stateless, we need to map the BOTH ingress/egress traffic (unlike SGs)
+# Define this once, so we don't duplicate rules
+# We will allow all, as intended with this basic example
+locals {
+  # NACL Ingress - allow all
+  nacl_ingress_rules = [
+    {
+      protocol   = -1
+      rule_no    = 100
+      action     = "allow"
+      cidr_block = "0.0.0.0/0"
+      from_port  = 0
+      to_port    = 0
+    }
+  ]
 
-# PUBLIC NACL - Locked down hosted web tier
-# Ingress: allow HTTP/HTTPS from anywhere
-resource "aws_network_acl_rule" "public_ingress_http" {
-  network_acl_id = module.sandbox_vpc.default_public_nacl_id
-  rule_number    = 100
-  egress         = false
-  protocol       = "tcp"
-  rule_action    = "allow"
-  cidr_block     = "0.0.0.0/0"
-  from_port      = 80
-  to_port        = 80
+  # NACL Egress - allow all
+  nacl_egress_rules = [
+    {
+      protocol   = -1
+      rule_no    = 100
+      action     = "allow"
+      cidr_block = "0.0.0.0/0"
+      from_port  = 0
+      to_port    = 0
+    }
+  ]
 }
 
-resource "aws_network_acl_rule" "public_ingress_https" {
-  network_acl_id = module.sandbox_vpc.default_public_nacl_id
-  rule_number    = 110
-  egress         = false
-  protocol       = "tcp"
-  rule_action    = "allow"
-  cidr_block     = "0.0.0.0/0"
-  from_port      = 443
-  to_port        = 443
+# Public NACL
+resource "aws_network_acl" "public" {
+  vpc_id = module.sandbox_vpc.vpc_id
+
+  dynamic "ingress" {
+    for_each = local.nacl_ingress_rules
+    content {
+      protocol   = ingress.value.protocol
+      rule_no    = ingress.value.rule_no
+      action     = ingress.value.action
+      cidr_block = ingress.value.cidr_block
+      from_port  = ingress.value.from_port
+      to_port    = ingress.value.to_port
+    }
+  }
+
+  dynamic "egress" {
+    for_each = local.nacl_egress_rules
+    content {
+      protocol   = egress.value.protocol
+      rule_no    = egress.value.rule_no
+      action     = egress.value.action
+      cidr_block = egress.value.cidr_block
+      from_port  = egress.value.from_port
+      to_port    = egress.value.to_port
+    }
+  }
 }
 
-# Egress: allow return traffic to clients' ephemeral ports
-resource "aws_network_acl_rule" "public_egress_https" {
-  network_acl_id = module.sandbox_vpc.default_public_nacl_id
-  rule_number    = 120
-  egress         = true
-  protocol       = "tcp"
-  rule_action    = "allow"
-  cidr_block     = "0.0.0.0/0"
-  from_port      = 1024
-  to_port        = 65535
+resource "aws_network_acl_association" "public_ingress" {
+  for_each = module.sandbox_vpc.default_public_subnet_ids
+
+  network_acl_id = aws_network_acl.public.id
+  subnet_id      = each.value
 }
 
-# PRIVATE NACL - Egress within VPC
-resource "aws_network_acl_rule" "private_egress_vpc" {
-  network_acl_id = module.sandbox_vpc.default_private_nacl_id
-  rule_number    = 100
-  egress         = true
-  protocol       = "-1"
-  rule_action    = "allow"
-  cidr_block     = var.vpc_cidr_block
+# Private NACL
+resource "aws_network_acl" "private" {
+  vpc_id = module.sandbox_vpc.vpc_id
+
+  dynamic "ingress" {
+    for_each = local.nacl_ingress_rules
+    content {
+      protocol   = ingress.value.protocol
+      rule_no    = ingress.value.rule_no
+      action     = ingress.value.action
+      cidr_block = ingress.value.cidr_block
+      from_port  = ingress.value.from_port
+      to_port    = ingress.value.to_port
+    }
+  }
+
+  dynamic "egress" {
+    for_each = local.nacl_egress_rules
+    content {
+      protocol   = egress.value.protocol
+      rule_no    = egress.value.rule_no
+      action     = egress.value.action
+      cidr_block = egress.value.cidr_block
+      from_port  = egress.value.from_port
+      to_port    = egress.value.to_port
+    }
+  }
 }
 
-# Ingress within VPC (return + peer traffic)
-resource "aws_network_acl_rule" "private_ingress_vpc" {
-  network_acl_id = module.sandbox_vpc.default_private_nacl_id
-  rule_number    = 100
-  egress         = false
-  protocol       = "-1"
-  rule_action    = "allow"
-  cidr_block     = var.vpc_cidr_block
+resource "aws_network_acl_association" "private_egress" {
+  for_each = module.sandbox_vpc.default_private_subnet_ids
+
+  network_acl_id = aws_network_acl.private.id
+  subnet_id      = each.value
 }

@@ -14,19 +14,6 @@ resource "aws_subnet" "default_public" {
   }
 }
 
-resource "aws_network_acl" "default_public_nacl" {
-  vpc_id = aws_vpc.vpc.id
-  tags = {
-    Name = "${var.vpc_name}-default-public-nacl"
-  }
-}
-
-resource "aws_network_acl_association" "default_public_nacl_assoc" {
-  for_each       = aws_subnet.default_public
-  subnet_id      = each.value.id
-  network_acl_id = aws_network_acl.default_public_nacl.id
-}
-
 resource "aws_default_route_table" "public" {
   default_route_table_id = aws_vpc.vpc.default_route_table_id
 
@@ -51,7 +38,6 @@ resource "aws_route_table_association" "public_rta" {
   route_table_id = aws_default_route_table.public.id
 }
 
-
 #--- DEFAULT PRIVATE SUBNET
 resource "aws_subnet" "default_private" {
   vpc_id   = aws_vpc.vpc.id
@@ -66,19 +52,6 @@ resource "aws_subnet" "default_private" {
     Environment = var.environment
     Provided_By = "terraform"
   }
-}
-
-resource "aws_network_acl" "default_private_nacl" {
-  vpc_id = aws_vpc.vpc.id
-  tags = {
-    Name = "${var.vpc_name}-default-private-nacl"
-  }
-}
-
-resource "aws_network_acl_association" "default_private_nacl_assoc" {
-  for_each       = aws_subnet.default_private
-  subnet_id      = each.value.id
-  network_acl_id = aws_network_acl.default_private_nacl.id
 }
 
 resource "aws_route_table" "private" {

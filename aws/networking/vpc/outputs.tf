@@ -17,13 +17,3 @@ output "default_public_subnet_ids" {
   description = "Map of public subnet IDs by AZ key"
   value       = { for k, s in aws_subnet.default_public : k => s.id }
 }
-
-output "default_public_nacl_id" {
-  description = "Default Public Subnet NACL"
-  value       = aws_network_acl.default_public_nacl.id
-}
-
-output "default_private_nacl_id" {
-  description = "Default Private Subnet NACL"
-  value       = aws_network_acl.default_private_nacl.id
-}
