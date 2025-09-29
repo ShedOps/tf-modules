@@ -2,7 +2,7 @@
 
 ## Uses IAM User and Role Authentication for EKS
 
-### Steps (Note: There IS a charge to deploying AWS infrastructure and services)
+### Steps (⚠️ Note: There IS a charge to deploying AWS infrastructure and services ⚠️)
 
 1. Using terraform, deploy example basic VPC, from aws/networking/vpc/examples/basic folder
 2. Deploy the basic EKS example, from this folder
