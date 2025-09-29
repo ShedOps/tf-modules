@@ -1,6 +1,6 @@
-# Example basic EKS cluster (using IAM User and Role Authentication for EKS) with varying available permissions
+# Example basic EKS Cluster
 
-## EKS Auditor example
+## Uses IAM User and Role Authentication for EKS
 
 ### Steps (Note: There IS a charge to deploying AWS infrastructure and services)
 
