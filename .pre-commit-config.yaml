@@ -60,6 +60,17 @@ repos:
       - id: markdownlint
         files: ^(docs/|README\.md|CHANGELOG\.md|.*\.md)$
 
+  # --- Security (AWS Access Keys etc)
+  - repo: local
+    hooks:
+      - id: trufflehog
+        name: TruffleHog
+        description: Scan for secrets in your current changes.
+        entry: trufflehog git file://. --since-commit HEAD --only-verified --fail
+        language: system
+        stages: [pre-commit]
+        pass_filenames: false
+
 # --- Python (to add when needed) ---
 # - repo: https://github.com/astral-sh/ruff-pre-commit
 #   rev: v0.5.6
